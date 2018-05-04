@@ -37,6 +37,7 @@ router.post('/from', function (req, res) {
 })
 // 注册
 router.post('/register', function (req, res) {
+    return;
     var sql = 'SELECT * FROM user';
     connection.query(sql, function (err, result) {
         if (err) {
