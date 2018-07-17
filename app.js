@@ -71,5 +71,5 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-app.listen(3300, 'local.zhouws.com')
+app.listen(3311, '172.16.0.85')
 module.exports = app;
