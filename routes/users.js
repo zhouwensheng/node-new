@@ -3,16 +3,16 @@ var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
 var connection = mysql.createConnection({
-    host: '116.62.209.16',
-    user: 'root',
-    password: 'MyNewPass4!',
-    port: '3306',
-    database: 'run111',
     // host: 'localhost',
     // user: 'root',
-    // password: '931017Zhouws',
+    // password: 'MyNewPass4!',
     // port: '3306',
     // database: 'run111',
+    host: 'localhost',
+    user: 'root',
+    password: '931017Zhouws',
+    port: '3306',
+    database: 'run111',
   });
 connection.connect();
 // 登陆
@@ -35,6 +35,8 @@ router.post('/from', function (req, res) {
         if (loty) {
             res.send({ success: '账号或密码错误' });
         } else {
+            console.log(3333442)
+            // res.cookie('name', '2266662', {path: '/', maxAge: 1000 * 60 * 60 * 24 * 30, signed: true, httpOnly: true});
             req.session.name = req.body.name; // 登录成功，设置 session
             res.send(obj)
         }
