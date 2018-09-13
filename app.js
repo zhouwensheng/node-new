@@ -44,7 +44,7 @@ app.use('/users', users);
 // 权限
 app.use(function (req, res, next) {
     if (!req.session.name) {
-      return res.send('401')
+      return res.send(401)
     } else {
         next()
     }
