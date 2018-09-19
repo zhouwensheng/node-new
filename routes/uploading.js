@@ -33,33 +33,28 @@ connection.connect();
 var upload = multer({
     storage : storage
 })
-router.post('/uploading', upload.single('goning'), function (req, res, next) {
+router.post('/pictureing', upload.single('goning'), function (req, res, next) {
+    console.log(434343)
     var filename = 'public/user/' + req.session.name + '.txt';
     var dataname = {'uploadPublic':req.file.filename};
-    fs.exists(filename, function(existes){
-        if(!existes){
-            console.log(dataname)
-            fs.writeFile(filename, dataname, function(err) {
-                if (err) {
-                    throw err;
-                }
-                console.log(typeof req.file)
-                console.log(req.file.filename)
-                res.send({success:true,data:req.file})
-            })          
-        }else{
-            fs.readFile(filename, 'utf-8', function(err, data) {
-                if (err) {
-                    throw err;
-                }
-                console.log(data);
-                console.log(typeof req.file)
-                console.log(req.file.filename)
-                res.send({success:true,data:req.file})
-            });
-           
+    fs.readFile(filename, 'utf-8', function(err, data) {
+        if (err) {
+            throw err;
         }
-    })
+        var sudata = JSON.parse(data);
+        if(!sudata.uploadPublic){
+            sudata.uploadPublic=req.file.filename;
+        }else{
+            sudata.uploadPublic=sudata.uploadPublic+';'+req.file.filename;
+        }
+        
+        fs.writeFile(filename, JSON.stringify(sudata), function(err) {
+            if (err) {
+                throw err;
+            }
+            res.send({success:true,data:req.file})
+        })        
+    });         
     // fs.readFile('./test.txt', 'utf8', function(err, data){
     //     if(err){
 
