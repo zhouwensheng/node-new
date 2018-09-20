@@ -33,8 +33,8 @@ connection.connect();
 var upload = multer({
     storage : storage
 })
+// 上传图片
 router.post('/pictureing', upload.single('goning'), function (req, res, next) {
-    console.log(434343)
     var filename = 'public/user/' + req.session.name + '.txt';
     var dataname = {'uploadPublic':req.file.filename};
     fs.readFile(filename, 'utf-8', function(err, data) {
@@ -55,15 +55,22 @@ router.post('/pictureing', upload.single('goning'), function (req, res, next) {
             res.send({success:true,data:req.file})
         })        
     });         
-    // fs.readFile('./test.txt', 'utf8', function(err, data){
-    //     if(err){
+})
+router.post('/removepicture', function(req,res,next){
+    var filename = 'public/user/' + req.session.name + '.txt';
+    if(req.body.removeName){
+        fs.readFile(filename,'utf-8',function(err,data){
+            if(err){
+                throw err;
+            }
+            var sudata = JSON.parse(data);
+            var suarrty = sudata.uploadPublic.split(';')
+            console.log(suarrty)
+            res.send({success:true})
+        })
+    }
+    
 
-    //     }
-    //     console.log(data);  
-    // });
-    // console.log(typeof req.file)
-    // console.log(req.file.filename)
-    // res.send({success:true,data:req.file})
 })
 module.exports = router;
  
