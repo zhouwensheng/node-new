@@ -39,6 +39,7 @@ var book = require('./routes/book');
 var view = require('./routes/view');
 var Email = require('./routes/Email');
 var uploading = require('./routes/uploading');
+var friend = require('./routes/friend');
 app.use('/users', users);
 
 // 权限
@@ -56,6 +57,7 @@ app.use('/book', book);
 app.use('/view', view);
 app.use('/Email', Email);
 app.use('/upload', uploading);
+app.use('/friend',friend)
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   var err = new Error('Not Found');
