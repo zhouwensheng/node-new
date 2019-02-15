@@ -5,6 +5,7 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+var socketio = require('socket.io');
 var fs = require('fs');
 var app = express();
 app.use(require('cors')({credentials: true, origin: true}));
@@ -45,11 +46,14 @@ app.use('/users', users);
 // 权限
 app.use(function (req, res, next) {
     if (!req.session.name) {
-      return res.send(401)
+      return res.sendStatus(401)
     } else {
         next()
     }
 
+})
+app.get('/verification',function(req, res){
+  res.send({success:true})
 })
 app.use('/picture', picture);
 app.use('/music', music);
