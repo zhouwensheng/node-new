@@ -5,7 +5,11 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-var socketio = require('socket.io');
+var log4js = require('log4js');
+log4js.configure({
+  appenders: { cheese: { type: 'dateFile', filename: 'cheese.log' } },
+  categories: { default: { appenders: ['cheese'], level: 'error' } }
+});
 var fs = require('fs');
 var app = express();
 app.use(require('cors')({credentials: true, origin: true}));
@@ -23,6 +27,7 @@ app.use(session({
     maxAge: 3600 * 1000  // 有效期，单位是毫秒
   }
  }));
+app.use(log4js.connectLogger(log4js.getLogger('cheese'), { level: 'auto'}));
 app.use(express.static(path.join(__dirname, 'public')));
 app.all('*', function (req, res, next) {
   res.header("Access-Control-Allow-Credentials", "true");
