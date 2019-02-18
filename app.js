@@ -5,11 +5,6 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-var log4js = require('log4js');
-log4js.configure({
-  appenders: { cheese: { type: 'dateFile', filename: 'cheese.log' } },
-  categories: { default: { appenders: ['cheese'], level: 'error' } }
-});
 var fs = require('fs');
 var app = express();
 app.use(require('cors')({credentials: true, origin: true}));
@@ -27,16 +22,31 @@ app.use(session({
     maxAge: 3600 * 1000  // 有效期，单位是毫秒
   }
  }));
-app.use(log4js.connectLogger(log4js.getLogger('cheese'), { level: 'auto'}));
+ var logs = require('./routes/logs');
 app.use(express.static(path.join(__dirname, 'public')));
-app.all('*', function (req, res, next) {
+app.all('*', async function (req, res, next) {
   res.header("Access-Control-Allow-Credentials", "true");
   res.header("Access-Control-Allow-Origin", req.headers.origin);
   res.header("Access-Control-Allow-Headers", "Content-Type,X-Requested-With");
   res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
   res.header("X-Powered-By", ' 3.2.1')
-  if (req.method == "OPTIONS") return res.send(200);/*让options请求快速返回*/
-  else next();
+  const start = new Date();
+  //响应间隔时间
+  var ms;
+  ms = new Date() - start;
+  if (req.method == "OPTIONS") {
+    return res.send(200)/*让options请求快速返回*/
+  } else {
+    try {
+      //开始进入到下一个中间件
+      await next();
+      //记录响应日志
+      logs.i(req, ms);
+    } catch (error) {
+      //记录异常日志
+      logs.e(req, error, ms);
+    }
+  };
 });
 var users = require('./routes/users');
 var picture = require('./routes/picture');
@@ -46,6 +56,7 @@ var view = require('./routes/view');
 var Email = require('./routes/Email');
 var uploading = require('./routes/uploading');
 var friend = require('./routes/friend');
+
 app.use('/users', users);
 
 // 权限
