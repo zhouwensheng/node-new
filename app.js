@@ -7,6 +7,8 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var fs = require('fs');
 var app = express();
+var helmet = require('helmet');
+var csp = require('express-csp-header');
 app.use(require('cors')({credentials: true, origin: true}));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -22,8 +24,22 @@ app.use(session({
     maxAge: 3600 * 1000  // 有效期，单位是毫秒
   }
  }));
- var logs = require('./routes/logs');
+ console.log(120987)
+var cspMiddleware = csp({
+    policies: {
+      'default-src': [csp.SELF],
+      'script-src': [csp.SELF, csp.INLINE, 'zhouwenshengwl.com'],
+      'style-src': [csp.SELF, 'mystyles.net'],
+      'img-src': ['data:', 'zhouwenshengwl.com'],
+      'worker-src': [csp.NONE],
+      'block-all-mixed-content': true
+    }
+});  
+app.use(helmet());
+app.use(cspMiddleware);
+var logs = require('./routes/logs');
 app.use(express.static(path.join(__dirname, 'public')));
+
 app.all('*', async function (req, res, next) {
   res.header("Access-Control-Allow-Credentials", "true");
   res.header("Access-Control-Allow-Origin", req.headers.origin);
