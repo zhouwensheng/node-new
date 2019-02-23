@@ -24,7 +24,6 @@ app.use(session({
     maxAge: 3600 * 1000  // 有效期，单位是毫秒
   }
  }));
- console.log(120987)
 var cspMiddleware = csp({
     policies: {
       'default-src': [csp.SELF],
@@ -80,9 +79,8 @@ app.use(function (req, res, next) {
     if (!req.session.name) {
       return res.sendStatus(401)
     } else {
-        next()
+      next()
     }
-
 })
 app.get('/verification',function(req, res){
   res.send({success:true})

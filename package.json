@@ -25,6 +25,7 @@
     "pm2": "./node_modules/pm2/bin/pm2"
   },
   "devDependencies": {
+    "autocannon": "^3.2.0",
     "config": "^2.0.1",
     "express-csp-header": "^2.2.0",
     "express-session": "^1.15.6",

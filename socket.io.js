@@ -30,4 +30,4 @@ io.sockets.on('connection', function(socket) {
         socket.broadcast.emit('chat5', chatinfo);
     });
 });
-server.listen(8080);
+server.listen(808);
